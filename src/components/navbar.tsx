@@ -7,9 +7,10 @@ type NavLink = { href: string; label: string; active?: boolean };
 
 const navLinks: NavLink[] = [
   { href: "/", label: "Home", active: true },
-  { href: "/destinations", label: "Destinations" },
-  { href: "/my-bookings", label: "My Bookings" },
-  { href: "/admin", label: "Admin" },
+  { href: "/destinations", label: "Destinations" , active: false },
+    { href: "/add-destination", label: "Add-Destination", active: false },
+  { href: "/my-bookings", label: "My Bookings", active: false },
+  { href: "/admin", label: "Admin", active: false },
 ];
 
 export function Navbar() {
