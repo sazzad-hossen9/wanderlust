@@ -22,8 +22,9 @@ export function Banner() {
         className="object-cover object-center"
       />
 
-      <div className="relative flex flex-1 items-center justify-center px-6 py-16 text-center">
-        <div>
+      <div className="relative flex flex-1 items-center justify-center">
+        <div className="mx-auto w-full max-w-7xl px-6 py-16 text-center">
+          <div>
           <h1 className="font-serif text-5xl leading-[1.15] font-medium lg:text-6xl">
             Discover Your
             <br />
@@ -48,6 +49,7 @@ export function Banner() {
             >
               VIEW DESTINATION
             </Button>
+          </div>
           </div>
         </div>
       </div>

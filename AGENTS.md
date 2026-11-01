@@ -35,6 +35,7 @@ For lint/typecheck verification: `npm run lint` → `npm run build` (also genera
 - shadcn style is `base-nova` (see `components.json`): components in `src/components/ui` import from `@base-ui/react/*`, **not** Radix UI. Don't write Radix-based shadcn code from memory — mirror existing component imports.
 - `cn` comes from the `cn` npm package (re-exported by `src/lib/utils.ts`), not clsx/tailwind-merge.
 - Add new primitives with the shadcn CLI (`npx shadcn add <name>`); icons are `lucide-react`.
+- Installed lucide-react (v1.66) has **no brand icons** (`Instagram`, `Linkedin`, `X` removed) — draw brand logos as small inline SVG components instead.
 - Tailwind v4 is CSS-first: design tokens and animation (`tw-animate-css`) live in `src/app/globals.css` via `@theme`; there is no `tailwind.config`.
 
 ## Next 16 gotchas vs. older habits

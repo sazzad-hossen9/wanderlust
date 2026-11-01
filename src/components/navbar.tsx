@@ -15,7 +15,7 @@ const navLinks: NavLink[] = [
 export function Navbar() {
   return (
     <header className="sticky top-0 z-40 bg-white">
-      <nav className="relative flex h-12 items-center justify-between px-4">
+      <nav className="relative mx-auto flex h-12 max-w-7xl items-center justify-between px-6">
         <ul className="flex items-center gap-6">
           {navLinks.map(({ href, label, active }) => (
             <li key={href}>
