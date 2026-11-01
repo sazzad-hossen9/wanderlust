@@ -13,6 +13,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    // Scaffolded shadcn kit code uses classic setState-in-effect patterns
+    // (carousel init, use-mobile init) that the strict react-hooks rule flags.
+    files: ["src/components/ui/**", "src/hooks/**"],
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;
