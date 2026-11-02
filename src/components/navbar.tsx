@@ -1,19 +1,35 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { cn } from "cn";
-
+import { authClient } from "@/lib/auth-client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "./ui/button";
 type NavLink = { href: string; label: string; active?: boolean };
 
 const navLinks: NavLink[] = [
   { href: "/", label: "Home", active: true },
-  { href: "/destinations", label: "Destinations" , active: false },
-    { href: "/add-destination", label: "Add-Destination", active: false },
+  { href: "/destinations", label: "Destinations", active: false },
+  { href: "/add-destination", label: "Add-Destination", active: false },
   { href: "/my-bookings", label: "My Bookings", active: false },
-  { href: "/admin", label: "Admin", active: false },
 ];
 
 export function Navbar() {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  // console.log(user);
+  const handleSignOut = () => {
+    authClient.signOut();
+  };
   return (
     <header className="sticky top-0 z-40 bg-white">
       <nav className="relative mx-auto flex h-12 max-w-7xl items-center justify-between px-6">
@@ -60,22 +76,53 @@ export function Navbar() {
               Profile
             </Link>
           </li>
-          <li>
-            <Link
-              href="/login"
-              className="text-sm font-semibold transition-colors hover:text-brand"
-            >
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/signup"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-brand"
-            >
-              Sign Up
-            </Link>
-          </li>
+
+          {user ? (
+            <Popover>
+              <PopoverTrigger
+                render={
+                  <Avatar>
+                    <AvatarImage
+                      referrerPolicy="no-referrer"
+                      src={user?.image as string}
+                    />
+                    <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                }
+              ></PopoverTrigger>
+              <PopoverContent>
+                <PopoverHeader>
+                  <PopoverTitle>{user?.name}</PopoverTitle>
+                  <PopoverDescription>
+                    <p>{user?.email}</p>
+                    <Button onClick={handleSignOut} variant={"destructive"}>
+                      Sign out{" "}
+                    </Button>
+                  </PopoverDescription>
+                </PopoverHeader>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <>
+              
+             
+                <Link
+                  href="/login"
+                  className="text-sm font-semibold transition-colors hover:text-brand"
+                >
+                  Login
+                </Link>
+              
+              
+                <Link
+                  href="/signup"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-brand"
+                >
+                  Sign Up
+                </Link>
+              
+            </>
+          )}
         </ul>
       </nav>
     </header>
