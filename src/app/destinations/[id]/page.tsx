@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BookingCard } from "./booking-card";
 import EditDestinationDialog from "@/components/editDestinationDialog";
+import DeleteDestination from "@/components/deleteDestination";
 
 const API_URL = "http://localhost:5000/destination";
 
@@ -71,9 +72,7 @@ export type DestinationDetail = {
 };
 
 // Number Convert Function
-function toNumber(
-  value: string | number | undefined
-): number | null {
+function toNumber(value: string | number | undefined): number | null {
   if (typeof value === "number") {
     return Number.isFinite(value) ? value : null;
   }
@@ -97,13 +96,8 @@ const designHighlights = [
 ];
 
 // Convert Backend Data
-function mapDestination(
-  raw: RawDestination
-): DestinationDetail | null {
-  const title =
-    raw["destination-name"] ??
-    raw.title ??
-    raw.name;
+function mapDestination(raw: RawDestination): DestinationDetail | null {
+  const title = raw["destination-name"] ?? raw.title ?? raw.name;
 
   if (!title) return null;
 
@@ -120,9 +114,7 @@ function mapDestination(
 
   if (Array.isArray(raw.highlights)) {
     highlights = raw.highlights.filter(
-      (item): item is string =>
-        typeof item === "string" &&
-        item.trim() !== ""
+      (item): item is string => typeof item === "string" && item.trim() !== "",
     );
   } else if (
     typeof raw.highlights === "string" &&
@@ -139,14 +131,9 @@ function mapDestination(
 
     title,
 
-    country:
-      raw.country ??
-      raw.location ??
-      "",
+    country: raw.country ?? raw.location ?? "",
 
-    category:
-      raw.category ??
-      null,
+    category: raw.category ?? null,
 
     price: toNumber(raw.price),
 
@@ -154,39 +141,24 @@ function mapDestination(
 
     reviews: toNumber(raw.reviews),
 
-    image:
-      raw["image-url"] ??
-      raw.image ??
-      raw.image_url ??
-      null,
+    image: raw["image-url"] ?? raw.image ?? raw.image_url ?? null,
 
     duration:
       raw.duration && raw.duration.trim() !== ""
         ? raw.duration
         : fallbackDuration,
 
-    departureDate:
-      raw["departure-date"] ??
-      null,
+    departureDate: raw["departure-date"] ?? null,
 
-    overview: (
-      raw.description ??
-      raw.overview ??
-      ""
-    ).trim(),
+    overview: (raw.description ?? raw.overview ?? "").trim(),
 
-    highlights:
-      highlights.length > 0
-        ? highlights
-        : designHighlights,
+    highlights: highlights.length > 0 ? highlights : designHighlights,
   };
 }
 
 // Fetch Destination
 const loadDestination = cache(
-  async (
-    id: string
-  ): Promise<DestinationDetail | null> => {
+  async (id: string): Promise<DestinationDetail | null> => {
     try {
       const res = await fetch(`${API_URL}/${id}`, {
         cache: "no-store",
@@ -202,7 +174,7 @@ const loadDestination = cache(
 
       return null;
     }
-  }
+  },
 );
 
 // Page Props
@@ -221,20 +193,14 @@ export async function generateMetadata({
   const detail = await loadDestination(id);
 
   return {
-    title: detail
-      ? `${detail.title} | Wanderlast`
-      : "Destination | Wanderlast",
+    title: detail ? `${detail.title} | Wanderlast` : "Destination | Wanderlast",
 
-    description:
-      detail?.overview ||
-      "Trip details, pricing and booking.",
+    description: detail?.overview || "Trip details, pricing and booking.",
   };
 }
 
 // Details Page
-export default async function DetailsPage({
-  params,
-}: DetailsPageProps) {
+export default async function DetailsPage({ params }: DetailsPageProps) {
   const { id } = await params;
 
   const detail = await loadDestination(id);
@@ -245,11 +211,9 @@ export default async function DetailsPage({
 
   return (
     <main className="mx-auto max-w-7xl px-6 pt-10 pb-24">
-
       {/* Top Bar */}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-
         <Link
           href="/destinations"
           className="flex items-center gap-2 text-sm text-foreground/80 transition-colors hover:text-foreground"
@@ -259,28 +223,22 @@ export default async function DetailsPage({
         </Link>
 
         <div className="flex items-center gap-2">
-
           {/* Edit Button */}
 
-          <EditDestinationDialog detail={detail} />
+          <div>
+            {" "}
+            <EditDestinationDialog detail={detail} />
+          </div>
 
           {/* Cancel Button */}
 
-          <Button
-            variant="outline"
-            className="h-9 rounded-[4px] border-red-300 px-4 text-sm text-red-500 hover:bg-red-50 hover:text-red-500"
-          >
-            <Trash2 className="mr-2 size-4" />
-            Cancel
-          </Button>
-
+         <DeleteDestination id={detail.id}/>
         </div>
       </div>
 
       {/* Hero Image */}
 
       <div className="relative mt-5 aspect-[2.8/1] w-full overflow-hidden rounded-md bg-brand-tint">
-
         {detail.image ? (
           <Image
             src={detail.image}
@@ -294,17 +252,14 @@ export default async function DetailsPage({
             No image
           </div>
         )}
-
       </div>
 
       {/* Content + Booking Sidebar */}
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_352px]">
-
         {/* Left Content */}
 
         <article>
-
           {/* Country */}
 
           {detail.country && (
@@ -323,14 +278,11 @@ export default async function DetailsPage({
           {/* Rating + Duration */}
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-
             {detail.rating !== null && (
               <span className="flex items-center gap-1.5">
                 <Star className="size-4 fill-brand text-brand" />
 
-                <span className="font-semibold">
-                  {detail.rating}
-                </span>
+                <span className="font-semibold">{detail.rating}</span>
               </span>
             )}
 
@@ -340,13 +292,9 @@ export default async function DetailsPage({
               </span>
             )}
 
-            {detail.rating !== null &&
-              detail.duration && (
-                <span
-                  aria-hidden
-                  className="h-4 w-px bg-foreground/20"
-                />
-              )}
+            {detail.rating !== null && detail.duration && (
+              <span aria-hidden className="h-4 w-px bg-foreground/20" />
+            )}
 
             {detail.duration && (
               <span className="flex items-center gap-1.5 font-medium">
@@ -354,35 +302,26 @@ export default async function DetailsPage({
                 {detail.duration}
               </span>
             )}
-
           </div>
 
           {/* Overview */}
 
           {detail.overview && (
             <section className="mt-10">
-
-              <h2 className="font-serif text-2xl">
-                Overview
-              </h2>
+              <h2 className="font-serif text-2xl">Overview</h2>
 
               <p className="mt-3 max-w-2xl text-[15px] leading-7 text-foreground/75">
                 {detail.overview}
               </p>
-
             </section>
           )}
 
           {/* Highlights */}
 
           <section className="mt-10">
-
-            <h2 className="font-serif text-2xl">
-              Highlights
-            </h2>
+            <h2 className="font-serif text-2xl">Highlights</h2>
 
             <ul className="mt-6 grid gap-x-10 gap-y-3 sm:grid-cols-2">
-
               {detail.highlights.map((highlight) => (
                 <li
                   key={highlight}
@@ -393,27 +332,20 @@ export default async function DetailsPage({
                   {highlight}
                 </li>
               ))}
-
             </ul>
-
           </section>
-
         </article>
 
         {/* Right Booking Sidebar */}
 
         <aside className="self-start lg:border-l lg:border-border lg:pl-10">
-
           <BookingCard
             title={detail.title}
             price={detail.price}
             departureDate={detail.departureDate}
           />
-
         </aside>
-
       </div>
-
     </main>
   );
 }
