@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
-import { refresh } from "next/cache";
 
 const DeleteDestination = ({ id }: { id: string }) => {
   const router = useRouter();
