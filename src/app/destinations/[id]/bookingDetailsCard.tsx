@@ -5,6 +5,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
+import { useSession } from "@/lib/auth-client";
 
 const perks = [
   "Free cancellation up to 7 days",
@@ -12,20 +13,42 @@ const perks = [
   "24/7 customer support",
 ] as const;
 
-export function BookingCard({
+export default function BookingDetailsCard({
   title,
   price,
   departureDate,
+  detail,
 }: {
   title: string;
   price: number | null;
   departureDate: string | null;
+  detail: Record<string, unknown>;
 }) {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const { data: session } = useSession();
+  const user = session?.user;
+  // console.log("destination ", user);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const date = String(formData.get("booking-date") ?? "");
-
+    // console.log("user destination page ", date);
+    const userData = {
+      userName: user?.name,
+      image: user?.image,
+      email: user?.email,
+      ...detail,
+      departureDate: departureDate,
+      bookingDate: new Date(),
+    };
+    const res = await fetch("http://localhost:5000/booking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    const bookingData = await res.json();
+    console.log("booking data", bookingData);
     // TODO: POST a real booking to the travel API once its checkout endpoint exists.
     toast.add({
       title: "Booking requested",
@@ -41,7 +64,6 @@ export function BookingCard({
         {price !== null ? `$${price}` : "—"}
       </p>
       <p className="mt-1 text-sm text-foreground/60">per person</p>
-
       <form onSubmit={handleSubmit} className="mt-6">
         <Input
           name="booking-date"

@@ -13,10 +13,10 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { BookingCard } from "./booking-card";
+// import { BookingCard } from "@/components/BookingCard";
 import EditDestinationDialog from "@/components/editDestinationDialog";
 import DeleteDestination from "@/components/deleteDestination";
+import BookingDetailsCard from "./bookingDetailsCard";
 
 const API_URL = "http://localhost:5000/destination";
 
@@ -232,7 +232,7 @@ export default async function DetailsPage({ params }: DetailsPageProps) {
 
           {/* Cancel Button */}
 
-         <DeleteDestination id={detail.id}/>
+          <DeleteDestination id={detail.id} />
         </div>
       </div>
 
@@ -339,10 +339,11 @@ export default async function DetailsPage({ params }: DetailsPageProps) {
         {/* Right Booking Sidebar */}
 
         <aside className="self-start lg:border-l lg:border-border lg:pl-10">
-          <BookingCard
+          <BookingDetailsCard
             title={detail.title}
             price={detail.price}
             departureDate={detail.departureDate}
+            detail={detail}
           />
         </aside>
       </div>
