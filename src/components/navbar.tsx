@@ -81,22 +81,27 @@ export function Navbar() {
             <Popover>
               <PopoverTrigger
                 render={
-                  <Avatar>
-                    <AvatarImage
-                      referrerPolicy="no-referrer"
-                      src={user?.image as string}
-                    />
-                    <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
+                  <button type="button" className="rounded-full">
+                    <Avatar>
+                      <AvatarImage
+                        referrerPolicy="no-referrer"
+                        src={user?.image as string}
+                      />
+                      <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </button>
                 }
-              ></PopoverTrigger>
+              />
+
               <PopoverContent>
                 <PopoverHeader>
                   <PopoverTitle>{user?.name}</PopoverTitle>
+
                   <PopoverDescription>
                     <p>{user?.email}</p>
-                    <Button onClick={handleSignOut} variant={"destructive"}>
-                      Sign out{" "}
+
+                    <Button onClick={handleSignOut} variant="destructive">
+                      Sign out
                     </Button>
                   </PopoverDescription>
                 </PopoverHeader>
@@ -104,23 +109,19 @@ export function Navbar() {
             </Popover>
           ) : (
             <>
-              
-             
-                <Link
-                  href="/login"
-                  className="text-sm font-semibold transition-colors hover:text-brand"
-                >
-                  Login
-                </Link>
-              
-              
-                <Link
-                  href="/signup"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-brand"
-                >
-                  Sign Up
-                </Link>
-              
+              <Link
+                href="/login"
+                className="text-sm font-semibold transition-colors hover:text-brand"
+              >
+                Login
+              </Link>
+
+              <Link
+                href="/signup"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-brand"
+              >
+                Sign Up
+              </Link>
             </>
           )}
         </ul>

@@ -17,6 +17,8 @@ import {
 import EditDestinationDialog from "@/components/editDestinationDialog";
 import DeleteDestination from "@/components/deleteDestination";
 import BookingDetailsCard from "./bookingDetailsCard";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const API_URL = "http://localhost:5000/destination";
 
@@ -156,12 +158,22 @@ function mapDestination(raw: RawDestination): DestinationDetail | null {
   };
 }
 
+
+// token
+
 // Fetch Destination
 const loadDestination = cache(
   async (id: string): Promise<DestinationDetail | null> => {
+  
+  const jwtToken=await auth.api.getToken({
+    headers: await headers()
+  })
+  console.log(jwtToken.token)
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
-        cache: "no-store",
+      const res = await fetch(`${API_URL}/${id}`,{
+        headers:{
+          authorization:jwtToken.token
+        }
       });
 
       if (!res.ok) return null;
