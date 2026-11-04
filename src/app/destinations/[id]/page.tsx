@@ -19,6 +19,7 @@ import DeleteDestination from "@/components/deleteDestination";
 import BookingDetailsCard from "./bookingDetailsCard";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 const API_URL = "http://localhost:5000/destination";
 
@@ -158,22 +159,18 @@ function mapDestination(raw: RawDestination): DestinationDetail | null {
   };
 }
 
-
 // token
 
 // Fetch Destination
 const loadDestination = cache(
   async (id: string): Promise<DestinationDetail | null> => {
-  
-  const jwtToken=await auth.api.getToken({
-    headers: await headers()
-  })
-  console.log(jwtToken.token)
+    const token = await getTokenFromServer();
+
     try {
-      const res = await fetch(`${API_URL}/${id}`,{
-        headers:{
-          authorization:jwtToken.token
-        }
+      const res = await fetch(`${API_URL}/${id}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) return null;

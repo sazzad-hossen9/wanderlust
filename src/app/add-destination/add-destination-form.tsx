@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
+import { getTokenFromClient } from "@/lib/getTokenFromServer";
 
 const categories = [
   "Beach",
@@ -29,25 +30,28 @@ const fieldClasses =
   "rounded-[4px] border-transparent bg-[#eef3f7] px-4 placeholder:text-neutral-400";
 
 export function AddDestinationForm() {
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    const res= await fetch(`http://localhost:5000/add-destination`,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify(data)
-    })
-    const submitData=await res.json()
+    const inputData = Object.fromEntries(formData.entries());
 
-console.log(submitData)
+    const token = await getTokenFromClient();
+    const res = await fetch(`http://localhost:5000/add-destination`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(inputData),
+    });
+    const submitData = await res.json();
+
+    console.log(submitData);
 
     // TODO: persist `data` via a server action / API route once a backend exists.
     toast.add({
       title: "Travel package added",
-      description: `“${data["destination-name"]}” has been saved as a draft.`,
+      description: `“${inputData["destination-name"]}” has been saved as a draft.`,
       type: "success",
     });
     // event.currentTarget.reset();
